@@ -54,6 +54,12 @@
             DeckListPageLabel = new Label();
             DeckListScrollRight = new Button();
             DeckListScrollLeft = new Button();
+            DeckTypeLabel = new Label();
+            DeckTypeComboBox = new ComboBox();
+            DeckNameLabel = new Label();
+            DeckNameTextBox = new TextBox();
+            FactionTypeComboBox = new ComboBox();
+            label1 = new Label();
             menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CopiesToAdd).BeginInit();
             SuspendLayout();
@@ -109,17 +115,17 @@
             // 
             // DeckLoader
             // 
-            DeckLoader.Filter = "JSON File|*.json|Unity Asset File|*.asset|Text File|*.txt|All Files|*.*";
+            DeckLoader.Filter = "JSON File|*.json|Text File|*.txt|All Files|*.*";
             DeckLoader.FileOk += DeckLoader_FileOk;
             // 
             // DeckSaver
             // 
-            DeckSaver.Filter = "JSON File|*.json|Unity Asset File|*.asset|Text File|*.txt|All Files|*.*";
+            DeckSaver.Filter = "JSON File|*.json|Text File|*.txt|All Files|*.*";
             DeckSaver.FileOk += DeckSaver_FileOk;
             // 
             // CardSearch
             // 
-            CardSearch.Location = new Point(33, 76);
+            CardSearch.Location = new Point(33, 114);
             CardSearch.Multiline = false;
             CardSearch.Name = "CardSearch";
             CardSearch.ScrollBars = RichTextBoxScrollBars.None;
@@ -134,7 +140,7 @@
             SearchList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             SearchList.FormattingEnabled = true;
             SearchList.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" });
-            SearchList.Location = new Point(34, 112);
+            SearchList.Location = new Point(34, 150);
             SearchList.Margin = new Padding(25, 3, 3, 3);
             SearchList.Name = "SearchList";
             SearchList.Size = new Size(320, 384);
@@ -146,7 +152,7 @@
             // 
             SearchCardLabel.AutoSize = true;
             SearchCardLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            SearchCardLabel.Location = new Point(33, 53);
+            SearchCardLabel.Location = new Point(33, 91);
             SearchCardLabel.Margin = new Padding(3, 25, 3, 0);
             SearchCardLabel.Name = "SearchCardLabel";
             SearchCardLabel.Size = new Size(152, 20);
@@ -155,7 +161,7 @@
             // 
             // CardAdder
             // 
-            CardAdder.Location = new Point(150, 504);
+            CardAdder.Location = new Point(150, 542);
             CardAdder.Name = "CardAdder";
             CardAdder.Size = new Size(62, 36);
             CardAdder.TabIndex = 6;
@@ -167,7 +173,7 @@
             // 
             DeckLabel.AutoSize = true;
             DeckLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            DeckLabel.Location = new Point(366, 91);
+            DeckLabel.Location = new Point(366, 129);
             DeckLabel.Name = "DeckLabel";
             DeckLabel.Size = new Size(103, 20);
             DeckLabel.TabIndex = 7;
@@ -178,7 +184,7 @@
             DeckList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             DeckList.FormattingEnabled = true;
             DeckList.IntegralHeight = false;
-            DeckList.Location = new Point(367, 112);
+            DeckList.Location = new Point(367, 150);
             DeckList.Margin = new Padding(10, 3, 3, 3);
             DeckList.Name = "DeckList";
             DeckList.Size = new Size(274, 384);
@@ -188,7 +194,7 @@
             // CardRemover
             // 
             CardRemover.Font = new Font("Segoe UI", 7F);
-            CardRemover.Location = new Point(366, 504);
+            CardRemover.Location = new Point(366, 542);
             CardRemover.Name = "CardRemover";
             CardRemover.Size = new Size(94, 35);
             CardRemover.TabIndex = 9;
@@ -201,7 +207,7 @@
             CopiesList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CopiesList.FormattingEnabled = true;
             CopiesList.IntegralHeight = false;
-            CopiesList.Location = new Point(647, 112);
+            CopiesList.Location = new Point(647, 150);
             CopiesList.Margin = new Padding(3, 3, 25, 3);
             CopiesList.Name = "CopiesList";
             CopiesList.SelectionMode = SelectionMode.None;
@@ -210,10 +216,10 @@
             // 
             // CardCount
             // 
-            CardCount.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
-            CardCount.Location = new Point(646, 92);
+            CardCount.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            CardCount.Location = new Point(635, 130);
             CardCount.Name = "CardCount";
-            CardCount.Size = new Size(40, 20);
+            CardCount.Size = new Size(64, 19);
             CardCount.TabIndex = 14;
             CardCount.Text = "×0";
             CardCount.TextAlign = ContentAlignment.MiddleCenter;
@@ -221,7 +227,7 @@
             // CardRemoverAll
             // 
             CardRemoverAll.Font = new Font("Segoe UI", 7F);
-            CardRemoverAll.Location = new Point(466, 503);
+            CardRemoverAll.Location = new Point(466, 541);
             CardRemoverAll.Name = "CardRemoverAll";
             CardRemoverAll.Size = new Size(79, 36);
             CardRemoverAll.TabIndex = 15;
@@ -231,7 +237,7 @@
             // 
             // CopiesToAdd
             // 
-            CopiesToAdd.Location = new Point(97, 510);
+            CopiesToAdd.Location = new Point(97, 548);
             CopiesToAdd.Maximum = new decimal(new int[] { 40, 0, 0, 0 });
             CopiesToAdd.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             CopiesToAdd.Name = "CopiesToAdd";
@@ -243,7 +249,7 @@
             // CopiesToAddLabel
             // 
             CopiesToAddLabel.AutoSize = true;
-            CopiesToAddLabel.Location = new Point(33, 512);
+            CopiesToAddLabel.Location = new Point(33, 550);
             CopiesToAddLabel.Name = "CopiesToAddLabel";
             CopiesToAddLabel.Size = new Size(57, 20);
             CopiesToAddLabel.TabIndex = 17;
@@ -251,7 +257,7 @@
             // 
             // SearchListScrollLeft
             // 
-            SearchListScrollLeft.Location = new Point(218, 504);
+            SearchListScrollLeft.Location = new Point(218, 542);
             SearchListScrollLeft.Name = "SearchListScrollLeft";
             SearchListScrollLeft.Size = new Size(36, 36);
             SearchListScrollLeft.TabIndex = 18;
@@ -261,7 +267,7 @@
             // 
             // SearchListScrollRight
             // 
-            SearchListScrollRight.Location = new Point(317, 504);
+            SearchListScrollRight.Location = new Point(317, 542);
             SearchListScrollRight.Name = "SearchListScrollRight";
             SearchListScrollRight.Size = new Size(36, 36);
             SearchListScrollRight.TabIndex = 19;
@@ -271,7 +277,7 @@
             // 
             // SearchListPageLabel
             // 
-            SearchListPageLabel.Location = new Point(260, 504);
+            SearchListPageLabel.Location = new Point(260, 542);
             SearchListPageLabel.Name = "SearchListPageLabel";
             SearchListPageLabel.Size = new Size(51, 36);
             SearchListPageLabel.TabIndex = 20;
@@ -280,7 +286,7 @@
             // 
             // DeckListPageLabel
             // 
-            DeckListPageLabel.Location = new Point(593, 503);
+            DeckListPageLabel.Location = new Point(593, 541);
             DeckListPageLabel.Name = "DeckListPageLabel";
             DeckListPageLabel.Size = new Size(51, 36);
             DeckListPageLabel.TabIndex = 23;
@@ -289,7 +295,7 @@
             // 
             // DeckListScrollRight
             // 
-            DeckListScrollRight.Location = new Point(650, 503);
+            DeckListScrollRight.Location = new Point(650, 541);
             DeckListScrollRight.Name = "DeckListScrollRight";
             DeckListScrollRight.Size = new Size(36, 36);
             DeckListScrollRight.TabIndex = 22;
@@ -299,7 +305,7 @@
             // 
             // DeckListScrollLeft
             // 
-            DeckListScrollLeft.Location = new Point(551, 503);
+            DeckListScrollLeft.Location = new Point(551, 541);
             DeckListScrollLeft.Name = "DeckListScrollLeft";
             DeckListScrollLeft.Size = new Size(36, 36);
             DeckListScrollLeft.TabIndex = 21;
@@ -307,11 +313,75 @@
             DeckListScrollLeft.UseVisualStyleBackColor = true;
             DeckListScrollLeft.Click += DeckListScrollLeft_Click;
             // 
+            // DeckTypeLabel
+            // 
+            DeckTypeLabel.AutoSize = true;
+            DeckTypeLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            DeckTypeLabel.Location = new Point(523, 46);
+            DeckTypeLabel.Name = "DeckTypeLabel";
+            DeckTypeLabel.Size = new Size(46, 20);
+            DeckTypeLabel.TabIndex = 24;
+            DeckTypeLabel.Text = "Type:";
+            // 
+            // DeckTypeComboBox
+            // 
+            DeckTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            DeckTypeComboBox.FormattingEnabled = true;
+            DeckTypeComboBox.Items.AddRange(new object[] { "Strategy" });
+            DeckTypeComboBox.Location = new Point(575, 43);
+            DeckTypeComboBox.Name = "DeckTypeComboBox";
+            DeckTypeComboBox.Size = new Size(91, 28);
+            DeckTypeComboBox.TabIndex = 25;
+            DeckTypeComboBox.SelectedIndexChanged += DeckTypeComboBox_SelectedIndexChanged;
+            // 
+            // DeckNameLabel
+            // 
+            DeckNameLabel.AutoSize = true;
+            DeckNameLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            DeckNameLabel.Location = new Point(34, 46);
+            DeckNameLabel.Name = "DeckNameLabel";
+            DeckNameLabel.Size = new Size(55, 20);
+            DeckNameLabel.TabIndex = 26;
+            DeckNameLabel.Text = "Name:";
+            // 
+            // DeckNameTextBox
+            // 
+            DeckNameTextBox.Location = new Point(95, 43);
+            DeckNameTextBox.Name = "DeckNameTextBox";
+            DeckNameTextBox.Size = new Size(258, 27);
+            DeckNameTextBox.TabIndex = 27;
+            // 
+            // FactionTypeComboBox
+            // 
+            FactionTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            FactionTypeComboBox.FormattingEnabled = true;
+            FactionTypeComboBox.Items.AddRange(new object[] { "Zombies" });
+            FactionTypeComboBox.Location = new Point(430, 43);
+            FactionTypeComboBox.Name = "FactionTypeComboBox";
+            FactionTypeComboBox.Size = new Size(87, 28);
+            FactionTypeComboBox.TabIndex = 28;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(382, 46);
+            label1.Name = "label1";
+            label1.Size = new Size(42, 20);
+            label1.TabIndex = 29;
+            label1.Text = "Side:";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(720, 556);
+            ClientSize = new Size(720, 600);
+            Controls.Add(label1);
+            Controls.Add(FactionTypeComboBox);
+            Controls.Add(DeckNameTextBox);
+            Controls.Add(DeckNameLabel);
+            Controls.Add(DeckTypeComboBox);
+            Controls.Add(DeckTypeLabel);
             Controls.Add(DeckListPageLabel);
             Controls.Add(DeckListScrollRight);
             Controls.Add(DeckListScrollLeft);
@@ -371,5 +441,11 @@
         private Label DeckListPageLabel;
         private Button DeckListScrollRight;
         private Button DeckListScrollLeft;
+        private Label DeckTypeLabel;
+        private ComboBox DeckTypeComboBox;
+        private Label DeckNameLabel;
+        private TextBox DeckNameTextBox;
+        private ComboBox FactionTypeComboBox;
+        private Label label1;
     }
 }

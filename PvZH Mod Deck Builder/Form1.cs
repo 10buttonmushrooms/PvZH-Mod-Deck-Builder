@@ -13,7 +13,8 @@ namespace PvZH_Mod_Deck_Builder
     public partial class Form1 : Form
     {
         // TODO: Make pages for DeckList and CardList
-        PvZHDeckInfo JsonDeckInfo;
+        JsonAIDeck AIDeckInfo;
+        JsonStrategyDeck StrategyDeckInfo;
         EditableDeck Deck = new();
         public BindingList<CardItem> CurrentCardItems = [];
         List<CardItem> SearchedCards = [];
@@ -27,6 +28,7 @@ namespace PvZH_Mod_Deck_Builder
             InitializeComponent();
             InitializeAllCards();
             InitializeDeck();
+            InitializeCombos();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -47,17 +49,34 @@ namespace PvZH_Mod_Deck_Builder
                 string JsonDeck = File.ReadAllText(DeckLoader.FileName);
                 try
                 {
-                    JsonDeckInfo = JsonSerializer.Deserialize<PvZHDeckInfo>(JsonDeck);
-                    Deck.SetCardsByIDs(JsonDeckInfo.MainDeckCardIds);
-                    DeckSaver.FileName = DeckLoader.FileName;
-                    DeckUpdate(false);
+                    AIDeckInfo = JsonSerializer.Deserialize<JsonAIDeck>(JsonDeck);
+                    StrategyDeckInfo = JsonSerializer.Deserialize<JsonStrategyDeck>(JsonDeck);
+                    if (AIDeckInfo.MainDeckCardIds != null)
+                    {
+                        Deck.SetCardsByIDs(AIDeckInfo.MainDeckCardIds);
+                        DeckSaver.FileName = DeckLoader.FileName;
+                        DeckTypeComboBox.SelectedItem = DeckTypeComboBox.Items[1];
+                        DeckNameTextBox.Text = AIDeckInfo.DeckName;
+                        DeckUpdate(false);
+                    }
+                    else if (StrategyDeckInfo.Cards != null)
+                    {
+                        Deck.SetCardsByIDs(StrategyDeckInfo.AllCardIDs());
+                        DeckSaver.FileName = DeckLoader.FileName;
+                        DeckTypeComboBox.SelectedItem = DeckTypeComboBox.Items[0];
+                        FactionTypeComboBox.SelectedItem = FactionTypeComboBox.Items[StrategyDeckInfo.Faction];
+                        DeckNameTextBox.Text = StrategyDeckInfo.m_Name;
+                        DeckUpdate(false);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid JSON File!", "ERROR!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    MessageBox.Show("Failed to convert this file to a PvZH Deck.", "ERROR!",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Something went wrong!", "ERROR!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
             }
         }
 
@@ -76,22 +95,52 @@ namespace PvZH_Mod_Deck_Builder
         }
         private void DeckSaver_FileOk()
         {
-            JsonDeckInfo = new();
-            JsonDeckInfo.MainDeckCardIds = Deck.GetCardsAsIDs();
             using (StreamWriter writer = new StreamWriter(DeckSaver.FileName))
             {
-                string JsonDeck = JsonSerializer.Serialize(JsonDeckInfo);
-                writer.Write(JsonDeck);
+                if ((DeckTypeCombo.DeckType)DeckTypeComboBox.SelectedValue == DeckTypeCombo.DeckType.AI)
+                {
+                    AIDeckInfo = new();
+                    AIDeckInfo.MainDeckCardIds = Deck.GetCardsAsIDs();
+                    string JsonDeck = JsonSerializer.Serialize(AIDeckInfo);
+                    writer.Write(JsonDeck);
+                }
+                else
+                {
+                    int Faction = 0;
+                    if ((FactionTypeCombo.FactionType)FactionTypeComboBox.SelectedValue == FactionTypeCombo.FactionType.Zombies)
+                        Faction = 1;
+
+                    StrategyDeckInfo = new();
+                    StrategyDeckInfo.m_Name = DeckNameTextBox.Text;
+                    StrategyDeckInfo.Faction = Faction;
+                    string JsonDeck = StrategyDeckInfo.GetCompleteJson(Deck.Cards);
+                    writer.Write(JsonDeck);
+                }
             }
         }
         private void DeckSaver_FileOk(object sender, CancelEventArgs e)
         {
-            JsonDeckInfo = new();
-            JsonDeckInfo.MainDeckCardIds = Deck.GetCardsAsIDs();
             using (StreamWriter writer = new StreamWriter(DeckSaver.FileName))
             {
-                string JsonDeck = JsonSerializer.Serialize(JsonDeckInfo);
-                writer.Write(JsonDeck);
+                if ((DeckTypeCombo.DeckType)DeckTypeComboBox.SelectedValue == DeckTypeCombo.DeckType.AI)
+                {
+                    AIDeckInfo = new();
+                    AIDeckInfo.MainDeckCardIds = Deck.GetCardsAsIDs();
+                    string JsonDeck = JsonSerializer.Serialize(AIDeckInfo);
+                    writer.Write(JsonDeck);
+                }
+                else
+                {
+                    int Faction = 0;
+                    if ((FactionTypeCombo.FactionType)FactionTypeComboBox.SelectedValue == FactionTypeCombo.FactionType.Zombies)
+                        Faction = 1;
+
+                    StrategyDeckInfo = new();
+                    StrategyDeckInfo.m_Name = DeckNameTextBox.Text;
+                    StrategyDeckInfo.Faction = Faction;
+                    string JsonDeck = StrategyDeckInfo.GetCompleteJson(Deck.Cards);
+                    writer.Write(JsonDeck);
+                }
             }
         }
 
@@ -111,6 +160,26 @@ namespace PvZH_Mod_Deck_Builder
             DeckList.DataSource = DisplayedDeckCards;
             DeckList.DisplayMember = "Name";
             DeckList.ValueMember = "ID";
+        }
+        void InitializeCombos()
+        {
+            BindingList<DeckTypeCombo> DeckTypeList =
+            [
+                new DeckTypeCombo("Strategy", DeckTypeCombo.DeckType.Strategy),
+                new DeckTypeCombo("AI", DeckTypeCombo.DeckType.AI)
+            ];
+            DeckTypeComboBox.DataSource = DeckTypeList;
+            DeckTypeComboBox.DisplayMember = "Name";
+            DeckTypeComboBox.ValueMember = "Type";
+
+            BindingList<FactionTypeCombo> FactionTypeList =
+            [
+                new FactionTypeCombo("Plants", FactionTypeCombo.FactionType.Plants),
+                new FactionTypeCombo("Zombies", FactionTypeCombo.FactionType.Zombies)
+            ];
+            FactionTypeComboBox.DataSource = FactionTypeList;
+            FactionTypeComboBox.DisplayMember = "Name";
+            FactionTypeComboBox.ValueMember = "Faction";
         }
 
         private void CardSearch_TextChanged(object sender, EventArgs e)
@@ -338,6 +407,17 @@ namespace PvZH_Mod_Deck_Builder
                 }
             }
         }
+
+        private void DeckTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (DeckTypeComboBox.SelectedValue is DeckTypeCombo.DeckType)
+            {
+                bool IsStrategyDeck = (DeckTypeCombo.DeckType)DeckTypeComboBox.SelectedValue == DeckTypeCombo.DeckType.Strategy;
+                DeckNameTextBox.Enabled = IsStrategyDeck;
+                FactionTypeComboBox.Enabled = IsStrategyDeck;
+            }
+        }
+
     }
     public struct CardItem
     {
@@ -350,6 +430,31 @@ namespace PvZH_Mod_Deck_Builder
             ID = id;
             if (name.Contains("--")) Name = id.ToString() + ": " + guid;
             else Name = id.ToString() + ": " + name;
+        }
+    }
+    public struct DeckTypeCombo
+    {
+        public string Name { get; set; } = "";
+        public DeckType Type { get; set; }
+        public enum DeckType { Strategy, AI };
+
+        public DeckTypeCombo(string name, DeckType type)
+        {
+            Name = name;
+            Type = type;
+        }
+    }
+    public struct FactionTypeCombo
+    {
+        public string Name { get; set; } = "";
+
+        public FactionType Faction { get; set; }
+        public enum FactionType { Plants, Zombies }
+
+        public FactionTypeCombo(string name, FactionType type) 
+        {
+            Name = name;
+            Faction = type;
         }
     }
 }
