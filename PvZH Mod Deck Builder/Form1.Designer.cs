@@ -34,35 +34,37 @@
             loadToolStripMenuItem = new ToolStripMenuItem();
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
-            optionsToolStripMenuItem = new ToolStripMenuItem();
-            warningPreferenceToolStripMenuItem = new ToolStripMenuItem();
-            wrongDeckSizeToolStripMenuItem = new ToolStripMenuItem();
-            classesWarningToolStripMenuItem = new ToolStripMenuItem();
-            copiesWarningToolStripMenuItem = new ToolStripMenuItem();
-            tokenCardsWarningToolStripMenuItem = new ToolStripMenuItem();
-            superpowersWarningToolStripMenuItem = new ToolStripMenuItem();
-            bothSidesWarningToolStripMenuItem = new ToolStripMenuItem();
             DeckLoader = new OpenFileDialog();
             DeckSaver = new SaveFileDialog();
             CardSearch = new RichTextBox();
-            CardList = new ListBox();
+            SearchList = new ListBox();
             SearchCardLabel = new Label();
             CardAdder = new Button();
             DeckLabel = new Label();
-            DeckListView = new ListBox();
+            DeckList = new ListBox();
             CardRemover = new Button();
             CopiesList = new ListBox();
             CardCount = new Label();
+            CardRemoverAll = new Button();
+            CopiesToAdd = new NumericUpDown();
+            CopiesToAddLabel = new Label();
+            SearchListScrollLeft = new Button();
+            SearchListScrollRight = new Button();
+            SearchListPageLabel = new Label();
+            DeckListPageLabel = new Label();
+            DeckListScrollRight = new Button();
+            DeckListScrollLeft = new Button();
             menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)CopiesToAdd).BeginInit();
             SuspendLayout();
             // 
             // menuStrip
             // 
             menuStrip.ImageScalingSize = new Size(20, 20);
-            menuStrip.Items.AddRange(new ToolStripItem[] { filesToolStripMenuItem, optionsToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { filesToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(714, 28);
+            menuStrip.Size = new Size(720, 28);
             menuStrip.TabIndex = 0;
             menuStrip.Text = "menuStrip1";
             // 
@@ -105,88 +107,19 @@
             saveAsToolStripMenuItem.Text = "Save As...";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
             // 
-            // optionsToolStripMenuItem
-            // 
-            optionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { warningPreferenceToolStripMenuItem });
-            optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(99, 24);
-            optionsToolStripMenuItem.Text = "Preferences";
-            // 
-            // warningPreferenceToolStripMenuItem
-            // 
-            warningPreferenceToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { wrongDeckSizeToolStripMenuItem, classesWarningToolStripMenuItem, copiesWarningToolStripMenuItem, tokenCardsWarningToolStripMenuItem, superpowersWarningToolStripMenuItem, bothSidesWarningToolStripMenuItem });
-            warningPreferenceToolStripMenuItem.Name = "warningPreferenceToolStripMenuItem";
-            warningPreferenceToolStripMenuItem.Size = new Size(239, 26);
-            warningPreferenceToolStripMenuItem.Text = " Illegal Deck Warnings";
-            // 
-            // wrongDeckSizeToolStripMenuItem
-            // 
-            wrongDeckSizeToolStripMenuItem.Checked = true;
-            wrongDeckSizeToolStripMenuItem.CheckOnClick = true;
-            wrongDeckSizeToolStripMenuItem.CheckState = CheckState.Checked;
-            wrongDeckSizeToolStripMenuItem.Name = "wrongDeckSizeToolStripMenuItem";
-            wrongDeckSizeToolStripMenuItem.Size = new Size(222, 26);
-            wrongDeckSizeToolStripMenuItem.Text = "Wrong Deck Size";
-            // 
-            // classesWarningToolStripMenuItem
-            // 
-            classesWarningToolStripMenuItem.Checked = true;
-            classesWarningToolStripMenuItem.CheckOnClick = true;
-            classesWarningToolStripMenuItem.CheckState = CheckState.Checked;
-            classesWarningToolStripMenuItem.Name = "classesWarningToolStripMenuItem";
-            classesWarningToolStripMenuItem.Size = new Size(222, 26);
-            classesWarningToolStripMenuItem.Text = "3+ Classes";
-            // 
-            // copiesWarningToolStripMenuItem
-            // 
-            copiesWarningToolStripMenuItem.Checked = true;
-            copiesWarningToolStripMenuItem.CheckOnClick = true;
-            copiesWarningToolStripMenuItem.CheckState = CheckState.Checked;
-            copiesWarningToolStripMenuItem.Name = "copiesWarningToolStripMenuItem";
-            copiesWarningToolStripMenuItem.Size = new Size(222, 26);
-            copiesWarningToolStripMenuItem.Text = "5+ Copies";
-            // 
-            // tokenCardsWarningToolStripMenuItem
-            // 
-            tokenCardsWarningToolStripMenuItem.Checked = true;
-            tokenCardsWarningToolStripMenuItem.CheckOnClick = true;
-            tokenCardsWarningToolStripMenuItem.CheckState = CheckState.Checked;
-            tokenCardsWarningToolStripMenuItem.Name = "tokenCardsWarningToolStripMenuItem";
-            tokenCardsWarningToolStripMenuItem.Size = new Size(222, 26);
-            tokenCardsWarningToolStripMenuItem.Text = "Token Cards";
-            // 
-            // superpowersWarningToolStripMenuItem
-            // 
-            superpowersWarningToolStripMenuItem.Checked = true;
-            superpowersWarningToolStripMenuItem.CheckOnClick = true;
-            superpowersWarningToolStripMenuItem.CheckState = CheckState.Checked;
-            superpowersWarningToolStripMenuItem.Name = "superpowersWarningToolStripMenuItem";
-            superpowersWarningToolStripMenuItem.Size = new Size(222, 26);
-            superpowersWarningToolStripMenuItem.Text = "Superpowers";
-            // 
-            // bothSidesWarningToolStripMenuItem
-            // 
-            bothSidesWarningToolStripMenuItem.Checked = true;
-            bothSidesWarningToolStripMenuItem.CheckOnClick = true;
-            bothSidesWarningToolStripMenuItem.CheckState = CheckState.Checked;
-            bothSidesWarningToolStripMenuItem.Name = "bothSidesWarningToolStripMenuItem";
-            bothSidesWarningToolStripMenuItem.Size = new Size(222, 26);
-            bothSidesWarningToolStripMenuItem.Text = "Plants and Zombies";
-            bothSidesWarningToolStripMenuItem.Click += bothSidesWarningToolStripMenuItem_Click;
-            // 
             // DeckLoader
             // 
-            DeckLoader.Filter = "JSON File|*.json|Text File|*.txt|All Files|*.*";
+            DeckLoader.Filter = "JSON File|*.json|Unity Asset File|*.asset|Text File|*.txt|All Files|*.*";
             DeckLoader.FileOk += DeckLoader_FileOk;
             // 
             // DeckSaver
             // 
-            DeckSaver.Filter = "JSON File|*.json|Text File|*.txt|All Files|*.*";
+            DeckSaver.Filter = "JSON File|*.json|Unity Asset File|*.asset|Text File|*.txt|All Files|*.*";
             DeckSaver.FileOk += DeckSaver_FileOk;
             // 
             // CardSearch
             // 
-            CardSearch.Location = new Point(33, 78);
+            CardSearch.Location = new Point(33, 76);
             CardSearch.Multiline = false;
             CardSearch.Name = "CardSearch";
             CardSearch.ScrollBars = RichTextBoxScrollBars.None;
@@ -195,36 +128,38 @@
             CardSearch.Text = "";
             CardSearch.TextChanged += CardSearch_TextChanged;
             // 
-            // CardList
+            // SearchList
             // 
-            CardList.DisplayMember = "Name";
-            CardList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CardList.FormattingEnabled = true;
-            CardList.Location = new Point(33, 114);
-            CardList.Name = "CardList";
-            CardList.Size = new Size(320, 441);
-            CardList.TabIndex = 3;
-            CardList.ValueMember = "Value";
-            CardList.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+            SearchList.DisplayMember = "Name";
+            SearchList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SearchList.FormattingEnabled = true;
+            SearchList.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" });
+            SearchList.Location = new Point(34, 112);
+            SearchList.Margin = new Padding(25, 3, 3, 3);
+            SearchList.Name = "SearchList";
+            SearchList.Size = new Size(320, 384);
+            SearchList.TabIndex = 3;
+            SearchList.ValueMember = "Value";
+            SearchList.SelectedIndexChanged += SearchList_SelectedIndexChanged;
             // 
             // SearchCardLabel
             // 
             SearchCardLabel.AutoSize = true;
             SearchCardLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            SearchCardLabel.Location = new Point(33, 55);
+            SearchCardLabel.Location = new Point(33, 53);
+            SearchCardLabel.Margin = new Padding(3, 25, 3, 0);
             SearchCardLabel.Name = "SearchCardLabel";
             SearchCardLabel.Size = new Size(152, 20);
             SearchCardLabel.TabIndex = 5;
             SearchCardLabel.Text = "Search Cards To Add";
-            SearchCardLabel.Click += SearchCardLabel_Click;
             // 
             // CardAdder
             // 
-            CardAdder.Location = new Point(33, 561);
+            CardAdder.Location = new Point(150, 504);
             CardAdder.Name = "CardAdder";
-            CardAdder.Size = new Size(320, 32);
+            CardAdder.Size = new Size(62, 36);
             CardAdder.TabIndex = 6;
-            CardAdder.Text = "Add to Deck";
+            CardAdder.Text = "Add";
             CardAdder.UseVisualStyleBackColor = true;
             CardAdder.Click += CardAdder_Click;
             // 
@@ -232,67 +167,168 @@
             // 
             DeckLabel.AutoSize = true;
             DeckLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            DeckLabel.Location = new Point(359, 55);
+            DeckLabel.Location = new Point(366, 91);
             DeckLabel.Name = "DeckLabel";
             DeckLabel.Size = new Size(103, 20);
             DeckLabel.TabIndex = 7;
             DeckLabel.Text = "Cards in Deck";
             // 
-            // DeckListView
+            // DeckList
             // 
-            DeckListView.FormattingEnabled = true;
-            DeckListView.IntegralHeight = false;
-            DeckListView.Location = new Point(359, 78);
-            DeckListView.Name = "DeckListView";
-            DeckListView.Size = new Size(320, 477);
-            DeckListView.TabIndex = 10;
-            DeckListView.SelectedIndexChanged += DeckListView_SelectedIndexChanged;
+            DeckList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            DeckList.FormattingEnabled = true;
+            DeckList.IntegralHeight = false;
+            DeckList.Location = new Point(367, 112);
+            DeckList.Margin = new Padding(10, 3, 3, 3);
+            DeckList.Name = "DeckList";
+            DeckList.Size = new Size(274, 384);
+            DeckList.TabIndex = 10;
+            DeckList.SelectedIndexChanged += DeckList_SelectedIndexChanged;
             // 
             // CardRemover
             // 
-            CardRemover.Location = new Point(359, 561);
+            CardRemover.Font = new Font("Segoe UI", 7F);
+            CardRemover.Location = new Point(366, 504);
             CardRemover.Name = "CardRemover";
-            CardRemover.Size = new Size(320, 32);
+            CardRemover.Size = new Size(94, 35);
             CardRemover.TabIndex = 9;
-            CardRemover.Text = "Remove from Deck";
+            CardRemover.Text = "Remove One";
             CardRemover.UseVisualStyleBackColor = true;
             CardRemover.Click += CardRemover_Click;
             // 
             // CopiesList
             // 
-            CopiesList.Font = new Font("Segoe UI", 9F);
+            CopiesList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CopiesList.FormattingEnabled = true;
             CopiesList.IntegralHeight = false;
-            CopiesList.Location = new Point(639, 78);
+            CopiesList.Location = new Point(647, 112);
+            CopiesList.Margin = new Padding(3, 3, 25, 3);
             CopiesList.Name = "CopiesList";
             CopiesList.SelectionMode = SelectionMode.None;
-            CopiesList.Size = new Size(40, 477);
+            CopiesList.Size = new Size(40, 384);
             CopiesList.TabIndex = 13;
             // 
             // CardCount
             // 
-            CardCount.AutoSize = true;
-            CardCount.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            CardCount.Location = new Point(639, 55);
+            CardCount.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
+            CardCount.Location = new Point(646, 92);
             CardCount.Name = "CardCount";
-            CardCount.Size = new Size(18, 20);
+            CardCount.Size = new Size(40, 20);
             CardCount.TabIndex = 14;
-            CardCount.Text = "0";
+            CardCount.Text = "×0";
             CardCount.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // CardRemoverAll
+            // 
+            CardRemoverAll.Font = new Font("Segoe UI", 7F);
+            CardRemoverAll.Location = new Point(466, 503);
+            CardRemoverAll.Name = "CardRemoverAll";
+            CardRemoverAll.Size = new Size(79, 36);
+            CardRemoverAll.TabIndex = 15;
+            CardRemoverAll.Text = "Remove All";
+            CardRemoverAll.UseVisualStyleBackColor = true;
+            CardRemoverAll.Click += CardRemoverAll_Click;
+            // 
+            // CopiesToAdd
+            // 
+            CopiesToAdd.Location = new Point(97, 510);
+            CopiesToAdd.Maximum = new decimal(new int[] { 40, 0, 0, 0 });
+            CopiesToAdd.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            CopiesToAdd.Name = "CopiesToAdd";
+            CopiesToAdd.Size = new Size(47, 27);
+            CopiesToAdd.TabIndex = 16;
+            CopiesToAdd.TextAlign = HorizontalAlignment.Center;
+            CopiesToAdd.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
+            // CopiesToAddLabel
+            // 
+            CopiesToAddLabel.AutoSize = true;
+            CopiesToAddLabel.Location = new Point(33, 512);
+            CopiesToAddLabel.Name = "CopiesToAddLabel";
+            CopiesToAddLabel.Size = new Size(57, 20);
+            CopiesToAddLabel.TabIndex = 17;
+            CopiesToAddLabel.Text = "Copies:";
+            // 
+            // SearchListScrollLeft
+            // 
+            SearchListScrollLeft.Location = new Point(218, 504);
+            SearchListScrollLeft.Name = "SearchListScrollLeft";
+            SearchListScrollLeft.Size = new Size(36, 36);
+            SearchListScrollLeft.TabIndex = 18;
+            SearchListScrollLeft.Text = "<";
+            SearchListScrollLeft.UseVisualStyleBackColor = true;
+            SearchListScrollLeft.Click += SearchListScrollLeft_Click;
+            // 
+            // SearchListScrollRight
+            // 
+            SearchListScrollRight.Location = new Point(317, 504);
+            SearchListScrollRight.Name = "SearchListScrollRight";
+            SearchListScrollRight.Size = new Size(36, 36);
+            SearchListScrollRight.TabIndex = 19;
+            SearchListScrollRight.Text = ">";
+            SearchListScrollRight.UseVisualStyleBackColor = true;
+            SearchListScrollRight.Click += SearchListScrollRight_Click;
+            // 
+            // SearchListPageLabel
+            // 
+            SearchListPageLabel.Location = new Point(260, 504);
+            SearchListPageLabel.Name = "SearchListPageLabel";
+            SearchListPageLabel.Size = new Size(51, 36);
+            SearchListPageLabel.TabIndex = 20;
+            SearchListPageLabel.Text = "0/0";
+            SearchListPageLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // DeckListPageLabel
+            // 
+            DeckListPageLabel.Location = new Point(593, 503);
+            DeckListPageLabel.Name = "DeckListPageLabel";
+            DeckListPageLabel.Size = new Size(51, 36);
+            DeckListPageLabel.TabIndex = 23;
+            DeckListPageLabel.Text = "0/0";
+            DeckListPageLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // DeckListScrollRight
+            // 
+            DeckListScrollRight.Location = new Point(650, 503);
+            DeckListScrollRight.Name = "DeckListScrollRight";
+            DeckListScrollRight.Size = new Size(36, 36);
+            DeckListScrollRight.TabIndex = 22;
+            DeckListScrollRight.Text = ">";
+            DeckListScrollRight.UseVisualStyleBackColor = true;
+            DeckListScrollRight.Click += DeckListScrollRight_Click;
+            // 
+            // DeckListScrollLeft
+            // 
+            DeckListScrollLeft.Location = new Point(551, 503);
+            DeckListScrollLeft.Name = "DeckListScrollLeft";
+            DeckListScrollLeft.Size = new Size(36, 36);
+            DeckListScrollLeft.TabIndex = 21;
+            DeckListScrollLeft.Text = "<";
+            DeckListScrollLeft.UseVisualStyleBackColor = true;
+            DeckListScrollLeft.Click += DeckListScrollLeft_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(714, 619);
+            ClientSize = new Size(720, 556);
+            Controls.Add(DeckListPageLabel);
+            Controls.Add(DeckListScrollRight);
+            Controls.Add(DeckListScrollLeft);
+            Controls.Add(SearchListPageLabel);
+            Controls.Add(SearchListScrollRight);
+            Controls.Add(SearchListScrollLeft);
+            Controls.Add(CopiesToAddLabel);
+            Controls.Add(CopiesToAdd);
+            Controls.Add(CardRemoverAll);
             Controls.Add(CardCount);
             Controls.Add(CopiesList);
-            Controls.Add(DeckListView);
+            Controls.Add(DeckList);
             Controls.Add(CardRemover);
             Controls.Add(DeckLabel);
             Controls.Add(CardAdder);
             Controls.Add(SearchCardLabel);
-            Controls.Add(CardList);
+            Controls.Add(SearchList);
             Controls.Add(CardSearch);
             Controls.Add(menuStrip);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
@@ -302,6 +338,7 @@
             Load += Form1_Load;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)CopiesToAdd).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -314,24 +351,25 @@
         private ToolStripMenuItem loadToolStripMenuItem;
         private ToolStripMenuItem saveToolStripMenuItem;
         private ToolStripMenuItem saveAsToolStripMenuItem;
-        private ToolStripMenuItem optionsToolStripMenuItem;
-        private ToolStripMenuItem warningPreferenceToolStripMenuItem;
-        private ToolStripMenuItem classesWarningToolStripMenuItem;
-        private ToolStripMenuItem copiesWarningToolStripMenuItem;
-        private ToolStripMenuItem bothSidesWarningToolStripMenuItem;
-        private ToolStripMenuItem tokenCardsWarningToolStripMenuItem;
-        private ToolStripMenuItem superpowersWarningToolStripMenuItem;
-        private ToolStripMenuItem wrongDeckSizeToolStripMenuItem;
         private OpenFileDialog DeckLoader;
         private SaveFileDialog DeckSaver;
         private RichTextBox CardSearch;
-        private ListBox CardList;
+        private ListBox SearchList;
         private Label SearchCardLabel;
         private Button CardAdder;
         private Label DeckLabel;
-        private ListBox DeckListView;
+        private ListBox DeckList;
         private Button CardRemover;
         private ListBox CopiesList;
         private Label CardCount;
+        private Button CardRemoverAll;
+        private NumericUpDown CopiesToAdd;
+        private Label CopiesToAddLabel;
+        private Button SearchListScrollLeft;
+        private Button SearchListScrollRight;
+        private Label SearchListPageLabel;
+        private Label DeckListPageLabel;
+        private Button DeckListScrollRight;
+        private Button DeckListScrollLeft;
     }
 }
