@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.DataFormats;
+using System.Diagnostics;
 
 namespace PvZH_Mod_Deck_Builder
 {
@@ -25,6 +26,8 @@ namespace PvZH_Mod_Deck_Builder
         int ItemsPerPage = 20;
         public Form1()
         {
+            CardsStorage.FirstTimeAllCardsJson();
+            CardsStorage.GetAllCardsFromJson();
             InitializeComponent();
             InitializeAllCards();
             InitializeDeck();
@@ -185,6 +188,7 @@ namespace PvZH_Mod_Deck_Builder
         private void CardSearch_TextChanged(object sender, EventArgs e)
         {
             CurrentCardItems.Clear();
+            CardIDList.Items.Clear();
             CurrentSearchListPage = 0;
             SearchedCards.Clear();
 
@@ -194,13 +198,15 @@ namespace PvZH_Mod_Deck_Builder
                 return;
             }
 
-            foreach (CardItem card in EditableDeck.AllCardItems)
+            foreach (CardItem Card in CardsStorage.AllCardItems)
             {
-                string cardName = card.Name.ToLower();
-                string searchText = CardSearch.Text.ToLower();
-                if (cardName.Contains(searchText))
+                string CardName = Card.Name.ToLower();
+                int CardID = Card.ID;
+                
+                string SearchText = CardSearch.Text.ToLower();
+                if (CardName.Contains(SearchText) || int.TryParse(SearchText, out int j) && j == Card.ID)
                 {
-                    SearchedCards.Add(card);
+                    SearchedCards.Add(Card);
                 }
             }
             if (SearchedCards.Count < 1)
@@ -211,6 +217,7 @@ namespace PvZH_Mod_Deck_Builder
             foreach (CardItem Card in SearchedCards.Take(20))
             {
                 CurrentCardItems.Add(Card);
+                CardIDList.Items.Add(Card.ID.ToString());
             }
             SetSearchListPageLabel();
             SearchList.SelectedItem = null;
@@ -237,7 +244,7 @@ namespace PvZH_Mod_Deck_Builder
             else
             {
                 int CurrentPage = CurrentDeckListPage + 1;
-                string str = CurrentPage.ToString() + "/" + (NumOfDeckPages() + 1).ToString() ;
+                string str = CurrentPage.ToString() + "/" + (NumOfDeckPages() + 1).ToString();
                 DeckListPageLabel.Text = str;
             }
         }
@@ -341,9 +348,11 @@ namespace PvZH_Mod_Deck_Builder
         void SearchList_PageChanged()
         {
             CurrentCardItems.Clear();
+            CardIDList.Items.Clear();
             foreach (CardItem Card in SearchedCards.Skip(CurrentSearchListPage * 20).Take(20))
             {
                 CurrentCardItems.Add(Card);
+                CardIDList.Items.Add(Card.ID.ToString());
             }
             SetSearchListPageLabel();
             SearchList.SelectedItem = null;
@@ -417,6 +426,10 @@ namespace PvZH_Mod_Deck_Builder
             }
         }
 
+        private void ModifyCardDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
     public struct CardItem
     {
@@ -427,8 +440,8 @@ namespace PvZH_Mod_Deck_Builder
         {
             Guid = guid;
             ID = id;
-            if (name.Contains("--")) Name = id.ToString() + ": " + guid;
-            else Name = id.ToString() + ": " + name;
+            if (name.Contains("--")) Name = guid;
+            else Name = name;
         }
     }
     public struct DeckTypeCombo

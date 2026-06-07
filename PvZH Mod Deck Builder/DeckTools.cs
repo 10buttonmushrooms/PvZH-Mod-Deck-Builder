@@ -90,7 +90,76 @@ namespace PvZH_Mod_Deck_Builder
     }
     internal class EditableDeck
     {
-        public static List<CardItem> AllCardItems =
+        public List<CardItem> Cards { get; set; } = [];
+        public int[] GetCardsAsIDs()
+        {
+            List<int> IDs = [];
+            foreach (CardItem Card in Cards)
+            {
+                IDs.Add(Card.ID);
+            }
+            return IDs.ToArray();
+        }
+        public List<CardItem> UniqueCards()
+        {
+            return Cards.DistinctBy(x => x.ID).ToList();
+        }
+        public int CopiesOfCard(CardItem Card)
+        {
+            int count = Cards.Count(x => x.ID == Card.ID);
+            return count;
+        }
+        public static CardItem GetCardByID(int id)
+        {
+            if (!CardsStorage.AllCardItems.Exists(x => x.ID == id))
+                CardsStorage.AllCardItems.Add(new CardItem(id, "???", "???"));
+
+            return CardsStorage.AllCardItems.Find(x => x.ID == id);
+            
+       
+        }
+        public void AddCardByID(int id)
+        {
+            Cards.Add(GetCardByID(id));
+        }
+        public void SetCardsByIDs(int[] IDs)
+        {
+            Cards.Clear();
+            IDs.Sort();
+            foreach (int id in IDs)
+            {
+                AddCardByID(id);
+            }
+        }
+        List<CardItem> StoredUniqueCards = [];
+
+        public bool UniqueCardsUpdated()
+        {
+            bool UCC = UniqueCardsChanged();
+            if (UCC) 
+            {
+                StoredUniqueCards.Clear();
+
+                foreach (CardItem Card in UniqueCards()) 
+                    StoredUniqueCards.Add(Card); 
+            }
+            return UCC;
+        }
+        bool UniqueCardsChanged()
+        {
+            if (StoredUniqueCards.Count < 1) return true;
+
+            if (UniqueCards().Count != StoredUniqueCards.Count) return true;
+
+            foreach (CardItem Card in StoredUniqueCards)
+                if (!UniqueCards().Exists(x => x.ID == Card.ID)) return true;
+
+            return false;
+        }
+    }
+    internal struct CardsStorage
+    {
+        static List<CardItem> DefaultAllCardItems =
         [
             new CardItem(1, "Guacodile", "2f9fa005-8b50-4d1a-89be-38e4a82036c4"),
             new CardItem(2, "Chimney Sweep", "52827e9d-5e5a-49fa-85f5-07d2dd72ae67"),
@@ -674,67 +743,31 @@ namespace PvZH_Mod_Deck_Builder
             new CardItem(690, "Captain Deadbeard", "Captain_Deadbeard_from_Barrel"),
             new CardItem(691, "Veloci-Radish Hatchling", "Veloci-Radish Solo")
         ];
-        public List<CardItem> Cards { get; set; } = [];
-        public int[] GetCardsAsIDs()
+        public static List<CardItem> AllCardItems = [];
+        static string PathToLocal = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        public static string PathToFolder = PathToLocal + "\\PvZH Deck Builder";
+        public static string PathToAllCards = PathToFolder + "\\AllCardData.json";
+        public static void FirstTimeAllCardsJson()
         {
-            List<int> IDs = [];
-            foreach (CardItem Card in Cards)
+            if (!Directory.Exists(PathToFolder))
             {
-                IDs.Add(Card.ID);
+                Directory.CreateDirectory(PathToFolder);
             }
-            return IDs.ToArray();
-        }
-        public List<CardItem> UniqueCards()
-        {
-            return Cards.DistinctBy(x => x.ID).ToList();
-        }
-        public int CopiesOfCard(CardItem Card)
-        {
-            int count = Cards.Count(x => x.ID == Card.ID);
-            return count;
-        }
-        public static CardItem GetCardByID(int id)
-        {
-            return AllCardItems.Find(x => x.ID == id);
-        }
-        public void AddCardByID(int id)
-        {
-            Cards.Add(GetCardByID(id));
-        }
-        public void SetCardsByIDs(int[] IDs)
-        {
-            Cards.Clear();
-            IDs.Sort();
-            foreach (int id in IDs)
+            if (!File.Exists(PathToAllCards))
             {
-                AddCardByID(id);
+                string str = JsonSerializer.Serialize(CardsStorage.DefaultAllCardItems);
+                using (StreamWriter writer = new StreamWriter(PathToAllCards))
+                {
+                    writer.Write(str);
+                }
             }
         }
-        List<CardItem> StoredUniqueCards = [];
-
-        public bool UniqueCardsUpdated()
+        public static void GetAllCardsFromJson()
         {
-            bool UCC = UniqueCardsChanged();
-            if (UCC) 
+            using (StreamReader reader = new StreamReader(PathToAllCards))
             {
-                StoredUniqueCards.Clear();
-
-                foreach (CardItem Card in UniqueCards()) 
-                    StoredUniqueCards.Add(Card); 
+                AllCardItems = JsonSerializer.Deserialize<List<CardItem>>(File.ReadAllText(PathToAllCards));
             }
-            return UCC;
-        }
-        bool UniqueCardsChanged()
-        {
-            if (StoredUniqueCards.Count < 1) return true;
-
-            if (UniqueCards().Count != StoredUniqueCards.Count) return true;
-
-            foreach (CardItem Card in StoredUniqueCards)
-                if (!UniqueCards().Exists(x => x.ID == Card.ID)) return true;
-
-            return false;
         }
     }
-    
 }

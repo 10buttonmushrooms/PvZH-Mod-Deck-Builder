@@ -34,6 +34,8 @@
             loadToolStripMenuItem = new ToolStripMenuItem();
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripMenuItem();
+            openCardDataToolStripMenuItem = new ToolStripMenuItem();
             DeckLoader = new OpenFileDialog();
             DeckSaver = new SaveFileDialog();
             CardSearch = new RichTextBox();
@@ -60,6 +62,7 @@
             DeckNameTextBox = new TextBox();
             FactionTypeComboBox = new ComboBox();
             label1 = new Label();
+            CardIDList = new ListBox();
             menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CopiesToAdd).BeginInit();
             SuspendLayout();
@@ -67,7 +70,7 @@
             // menuStrip
             // 
             menuStrip.ImageScalingSize = new Size(20, 20);
-            menuStrip.Items.AddRange(new ToolStripItem[] { filesToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { filesToolStripMenuItem, toolStripMenuItem1, openCardDataToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(720, 28);
@@ -113,6 +116,18 @@
             saveAsToolStripMenuItem.Text = "Save As...";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
             // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(14, 24);
+            // 
+            // openCardDataToolStripMenuItem
+            // 
+            openCardDataToolStripMenuItem.Name = "openCardDataToolStripMenuItem";
+            openCardDataToolStripMenuItem.Size = new Size(141, 24);
+            openCardDataToolStripMenuItem.Text = "Modify Card Data";
+            openCardDataToolStripMenuItem.Click += ModifyCardDataToolStripMenuItem_Click;
+            // 
             // DeckLoader
             // 
             DeckLoader.Filter = "JSON File|*.json|Text File|*.txt|All Files|*.*";
@@ -140,10 +155,10 @@
             SearchList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             SearchList.FormattingEnabled = true;
             SearchList.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" });
-            SearchList.Location = new Point(34, 150);
+            SearchList.Location = new Point(79, 152);
             SearchList.Margin = new Padding(25, 3, 3, 3);
             SearchList.Name = "SearchList";
-            SearchList.Size = new Size(320, 384);
+            SearchList.Size = new Size(274, 384);
             SearchList.TabIndex = 3;
             SearchList.ValueMember = "Value";
             SearchList.SelectedIndexChanged += SearchList_SelectedIndexChanged;
@@ -371,11 +386,25 @@
             label1.TabIndex = 29;
             label1.Text = "Side:";
             // 
+            // CardIDList
+            // 
+            CardIDList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            CardIDList.FormattingEnabled = true;
+            CardIDList.IntegralHeight = false;
+            CardIDList.Items.AddRange(new object[] { "691" });
+            CardIDList.Location = new Point(34, 152);
+            CardIDList.Margin = new Padding(3, 3, 25, 3);
+            CardIDList.Name = "CardIDList";
+            CardIDList.SelectionMode = SelectionMode.None;
+            CardIDList.Size = new Size(41, 384);
+            CardIDList.TabIndex = 30;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(720, 600);
+            Controls.Add(CardIDList);
             Controls.Add(label1);
             Controls.Add(FactionTypeComboBox);
             Controls.Add(DeckNameTextBox);
@@ -447,5 +476,8 @@
         private TextBox DeckNameTextBox;
         private ComboBox FactionTypeComboBox;
         private Label label1;
+        private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripMenuItem openCardDataToolStripMenuItem;
+        private ListBox CardIDList;
     }
 }
