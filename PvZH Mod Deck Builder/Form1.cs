@@ -348,8 +348,8 @@ namespace PvZH_Mod_Deck_Builder
         {
             Guid = guid;
             ID = id;
-            if (name.Contains("--")) Name = guid;
-            else Name = name;
+            if (name.Contains("--")) Name = id.ToString() + ": " + guid;
+            else Name = id.ToString() + ": " + name;
         }
     }
 }
