@@ -108,7 +108,7 @@ namespace PvZH_Mod_Deck_Builder
         }
         void InitializeDeck()
         {
-            DeckList.DataSource = DeckCards;
+            DeckList.DataSource = DisplayedDeckCards;
             DeckList.DisplayMember = "Name";
             DeckList.ValueMember = "ID";
         }
@@ -182,18 +182,6 @@ namespace PvZH_Mod_Deck_Builder
                 DeckUpdate(false);
             }
         }
-        List<CardItem> StoredUniqueCards = [];
-
-        bool UniqueCardsChanged()
-        {
-            if (StoredUniqueCards.Count < 1) return true;
-            if (Deck.UniqueCards().Count != StoredUniqueCards.Count) return true;
-            foreach (CardItem Card in StoredUniqueCards)
-            {
-                if (!Deck.UniqueCards().Exists(x => x.ID == Card.ID)) return true;
-            }
-            return false;
-        }
         private void DeckUpdate(bool RemovingCards)
         {
             Deck.Cards = Deck.Cards.OrderBy(x => x.ID).ToList();
@@ -201,24 +189,20 @@ namespace PvZH_Mod_Deck_Builder
             CurrentDeckListPage = Math.Clamp(CurrentDeckListPage, 0, NumOfDeckPages());
             SetDeckListPageLabel();
 
-            List<CardItem> DisplayedDeckCards =
+            List<CardItem> CardsToDisplay =
                 Deck.UniqueCards().Skip(ItemsPerPage * CurrentDeckListPage).Take(ItemsPerPage).ToList();
 
-            foreach (CardItem Card in DisplayedDeckCards)
+            foreach (CardItem Card in CardsToDisplay)
                 CopiesList.Items.Add("×" + Deck.CopiesOfCard(Card).ToString());
 
             CardCount.Text = "×" + Deck.Cards.Count.ToString();
-            bool UCC = UniqueCardsChanged();
+            bool UCC = Deck.UniqueCardsUpdated();
             if (UCC)
             {
-                DeckCards.Clear();
-                StoredUniqueCards.Clear();
+                DisplayedDeckCards.Clear();
 
-                foreach (CardItem Card in Deck.UniqueCards())
-                    StoredUniqueCards.Add(Card);
-
-                foreach (CardItem Card in DisplayedDeckCards)
-                    DeckCards.Add(EditableDeck.GetCardByID(Card.ID));
+                foreach (CardItem Card in CardsToDisplay)
+                    DisplayedDeckCards.Add(EditableDeck.GetCardByID(Card.ID));
 
                 if (RemovingCards && DeckList.Items.Count > 0)
                 {
@@ -231,21 +215,21 @@ namespace PvZH_Mod_Deck_Builder
         private void Deck_PageChanged()
         {
             CopiesList.Items.Clear();
-            DeckCards.Clear();
+            DisplayedDeckCards.Clear();
 
-            List<CardItem> DisplayedDeckCards =
+            List<CardItem> CardsToDisplay =
                 Deck.UniqueCards().Skip(ItemsPerPage * CurrentDeckListPage).Take(ItemsPerPage).ToList();
 
-            foreach (CardItem Card in DisplayedDeckCards)
+            foreach (CardItem Card in CardsToDisplay)
                 CopiesList.Items.Add("×" + Deck.CopiesOfCard(Card).ToString());
 
-            foreach (CardItem Card in DisplayedDeckCards)
-                DeckCards.Add(EditableDeck.GetCardByID(Card.ID));
+            foreach (CardItem Card in CardsToDisplay)
+                DisplayedDeckCards.Add(EditableDeck.GetCardByID(Card.ID));
 
             SetDeckListPageLabel();
             DeckList.SelectedItem = null;
         }
-        BindingList<CardItem> DeckCards { get; set; } = [];
+        BindingList<CardItem> DisplayedDeckCards { get; set; } = [];
 
         private void CardRemover_Click(object sender, EventArgs e)
         {
@@ -253,7 +237,6 @@ namespace PvZH_Mod_Deck_Builder
             if (SelectedDeckCardID > 0 && CardToRemove != null)
             {
                 Deck.Cards.Remove(CardToRemove);
-                bool UCC = UniqueCardsChanged();
                 DeckUpdate(true);
             }
         }
@@ -262,14 +245,7 @@ namespace PvZH_Mod_Deck_Builder
             if (SelectedDeckCardID > 0 && Deck.Cards.Any(x => x.ID == SelectedDeckCardID))
             {
                 Deck.Cards.RemoveAll(x => x.ID == SelectedDeckCardID);
-                bool UCC = UniqueCardsChanged();
                 DeckUpdate(true);
-                if (UCC && DeckList.Items.Count > 0)
-                {
-                    DeckList.SelectedItem = DeckList.Items[^1];
-                    DeckList_SelectedIndexChanged();
-                }
-                else if (UCC) DeckList.SelectedItem = null;
             }
         }
         private void DeckList_SelectedIndexChanged()

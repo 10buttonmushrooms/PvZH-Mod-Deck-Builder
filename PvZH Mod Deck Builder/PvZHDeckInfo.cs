@@ -636,6 +636,31 @@ namespace PvZH_Mod_Deck_Builder
                 AddCardByID(id);
             }
         }
+        List<CardItem> StoredUniqueCards = [];
+
+        public bool UniqueCardsUpdated()
+        {
+            bool UCC = UniqueCardsChanged();
+            if (UCC) 
+            {
+                StoredUniqueCards.Clear();
+
+                foreach (CardItem Card in UniqueCards()) 
+                    StoredUniqueCards.Add(Card); 
+            }
+            return UCC;
+        }
+        bool UniqueCardsChanged()
+        {
+            if (StoredUniqueCards.Count < 1) return true;
+
+            if (UniqueCards().Count != StoredUniqueCards.Count) return true;
+
+            foreach (CardItem Card in StoredUniqueCards)
+                if (!UniqueCards().Exists(x => x.ID == Card.ID)) return true;
+
+            return false;
+        }
     }
     
 }
