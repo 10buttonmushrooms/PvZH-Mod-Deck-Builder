@@ -404,7 +404,7 @@
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             MainMenuStrip = menuStrip;
             Name = "Form1";
-            Text = "Deck Creator/Editor for PvZH Mods";
+            Text = "PvZH Deck Builder for Mods";
             Load += Form1_Load;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();

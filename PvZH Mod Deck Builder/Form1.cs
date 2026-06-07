@@ -337,6 +337,7 @@ namespace PvZH_Mod_Deck_Builder
                 Deck.Cards.Clear();
                 DeckSaver.FileName = "";
                 DeckUpdate(false);
+                DeckNameTextBox.Text = "";
             }
         }
         void SearchList_PageChanged()
