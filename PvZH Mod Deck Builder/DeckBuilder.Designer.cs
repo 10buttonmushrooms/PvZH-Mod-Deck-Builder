@@ -1,6 +1,6 @@
 ﻿namespace PvZH_Mod_Deck_Builder
 {
-    partial class Form1
+    partial class DeckBuilder
     {
         /// <summary>
         ///  Required designer variable.
@@ -37,6 +37,7 @@
             toolStripMenuItem1 = new ToolStripMenuItem();
             openCardDataToolStripMenuItem = new ToolStripMenuItem();
             openCardDataLocationToolStripMenuItem = new ToolStripMenuItem();
+            reloadCardDataToolStripMenuItem = new ToolStripMenuItem();
             DeckLoader = new OpenFileDialog();
             DeckSaver = new SaveFileDialog();
             CardSearch = new RichTextBox();
@@ -64,7 +65,6 @@
             FactionTypeComboBox = new ComboBox();
             label1 = new Label();
             CardIDList = new ListBox();
-            reloadCardDataToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CopiesToAdd).BeginInit();
             SuspendLayout();
@@ -136,6 +136,13 @@
             openCardDataLocationToolStripMenuItem.Size = new Size(260, 26);
             openCardDataLocationToolStripMenuItem.Text = "Open Card Data Location";
             openCardDataLocationToolStripMenuItem.Click += openCardDataLocationToolStripMenuItem_Click;
+            // 
+            // reloadCardDataToolStripMenuItem
+            // 
+            reloadCardDataToolStripMenuItem.Name = "reloadCardDataToolStripMenuItem";
+            reloadCardDataToolStripMenuItem.Size = new Size(260, 26);
+            reloadCardDataToolStripMenuItem.Text = "Reload Card Data";
+            reloadCardDataToolStripMenuItem.Click += reloadCardDataToolStripMenuItem_Click;
             // 
             // DeckLoader
             // 
@@ -400,7 +407,6 @@
             CardIDList.Font = new Font("Arial", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             CardIDList.FormattingEnabled = true;
             CardIDList.IntegralHeight = false;
-            CardIDList.Items.AddRange(new object[] { "691" });
             CardIDList.Location = new Point(34, 152);
             CardIDList.Margin = new Padding(3, 3, 25, 3);
             CardIDList.Name = "CardIDList";
@@ -408,14 +414,7 @@
             CardIDList.Size = new Size(41, 384);
             CardIDList.TabIndex = 30;
             // 
-            // reloadCardDataToolStripMenuItem
-            // 
-            reloadCardDataToolStripMenuItem.Name = "reloadCardDataToolStripMenuItem";
-            reloadCardDataToolStripMenuItem.Size = new Size(260, 26);
-            reloadCardDataToolStripMenuItem.Text = "Reload Card Data";
-            reloadCardDataToolStripMenuItem.Click += reloadCardDataToolStripMenuItem_Click;
-            // 
-            // Form1
+            // DeckBuilder
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -446,9 +445,10 @@
             Controls.Add(SearchList);
             Controls.Add(CardSearch);
             Controls.Add(menuStrip);
-            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             MainMenuStrip = menuStrip;
-            Name = "Form1";
+            MaximizeBox = false;
+            Name = "DeckBuilder";
             Text = "PvZH Deck Builder for Mods";
             Load += Form1_Load;
             menuStrip.ResumeLayout(false);

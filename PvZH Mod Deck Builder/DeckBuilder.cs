@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace PvZH_Mod_Deck_Builder
 {
-    public partial class Form1 : Form
+    public partial class DeckBuilder : Form
     {
         // TODO: Make pages for DeckList and CardList
         JsonAIDeck AIDeckInfo;
@@ -24,7 +24,7 @@ namespace PvZH_Mod_Deck_Builder
         int CurrentSearchListPage = 0;
         int CurrentDeckListPage = 0;
         int ItemsPerPage = 20;
-        public Form1()
+        public DeckBuilder()
         {
             CardsStorage.FirstTimeAllCardsJson();
             CardsStorage.GetAllCardsFromJson();
