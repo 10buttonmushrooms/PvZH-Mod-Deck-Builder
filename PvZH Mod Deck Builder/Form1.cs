@@ -434,6 +434,8 @@ namespace PvZH_Mod_Deck_Builder
         private void reloadCardDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CardsStorage.GetAllCardsFromJson();
+            Deck.ForceUniqueCardsUpdate();
+            DeckUpdate(false);
         }
     }
     public struct CardItem

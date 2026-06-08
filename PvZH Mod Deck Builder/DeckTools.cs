@@ -133,6 +133,11 @@ namespace PvZH_Mod_Deck_Builder
         }
         List<CardItem> StoredUniqueCards = [];
 
+        public void ForceUniqueCardsUpdate()
+        {
+            StoredUniqueCards.Clear();
+        }
+
         public bool UniqueCardsUpdated()
         {
             bool UCC = UniqueCardsChanged();
