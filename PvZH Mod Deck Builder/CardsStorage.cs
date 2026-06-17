@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using HtmlAgilityPack;
 
 namespace PvZH_Mod_Deck_Builder
 {
@@ -595,39 +596,30 @@ namespace PvZH_Mod_Deck_Builder
         static string PathToLocal = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static string PathToFolder = PathToLocal + "\\PvZH Deck Builder";
         public static string PathToAllCards = PathToFolder + "\\AllCardData.json";
-        public static void FirstTimeAllCardsJson()
+        
+        public static void LoadDefaultCards()
         {
-            if (!Directory.Exists(PathToFolder))
+            AllCardItems.Clear();
+            foreach (CardItem Card in DefaultAllCardItems) AllCardItems.Add(Card);
+        }
+        public static void SetCustomCards(string[] lines)
+        {
+            AllCardItems.Clear();
+            foreach (string CDK in CardDataHandler.LoadedCardData.Keys)
             {
-                Directory.CreateDirectory(PathToFolder);
-            }
-            if (!File.Exists(PathToAllCards))
-            {
-                string str = JsonSerializer.Serialize(DefaultAllCardItems);
-                using (StreamWriter writer = new StreamWriter(PathToAllCards))
+                string prefabname = CardDataHandler.LoadedCardData[CDK].prefabName;
+                string CSVSearcher = prefabname + "_name";
+                List<string> lineslist = lines.ToList();
+                string nameline = lineslist.Find(x => x.StartsWith(CSVSearcher));
+                if (nameline != null)
                 {
-                    writer.Write(str);
+                    int id = int.Parse(CDK);
+                    string cardname = nameline.Split(',')[1];
+                    cardname = cardname.Replace(" ", "!-spckey-!");
+                    cardname = ReadSharp.HtmlUtilities.ConvertToPlainText(cardname);
+                    cardname = cardname.Replace("!-spckey-!", " ");
+                    AllCardItems.Add(new CardItem(id, cardname, prefabname));
                 }
-            }
-        }
-        public static void GetAllCardsFromJson()
-        {
-            using (StreamReader reader = new StreamReader(PathToAllCards))
-            {
-                AllCardItems = JsonSerializer.Deserialize<List<CardItem>>(File.ReadAllText(PathToAllCards));
-                AllCardItems = AllCardItems.OrderBy(x => x.ID).ToList();
-            }
-        }
-        public static void UpdateJsonFileWithNewCardData()
-        {
-            if (!Directory.Exists(PathToFolder))
-            {
-                Directory.CreateDirectory(PathToFolder);
-            }
-            string str = JsonSerializer.Serialize(AllCardItems);
-            using (StreamWriter writer = new StreamWriter(PathToAllCards))
-            {
-                writer.Write(str);
             }
         }
     }

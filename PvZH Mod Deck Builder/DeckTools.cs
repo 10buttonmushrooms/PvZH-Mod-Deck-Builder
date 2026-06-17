@@ -162,4 +162,17 @@ namespace PvZH_Mod_Deck_Builder
             return false;
         }
     }
+    public struct CardItem
+    {
+        public string Name { get; set; } = "";
+        public int ID { get; set; } = -1;
+        public string Guid { get; set; } = "";
+        public CardItem(int id, string name, string guid)
+        {
+            Guid = guid;
+            ID = id;
+            if (name.Contains("--")) Name = guid;
+            else Name = name;
+        }
+    }
 }

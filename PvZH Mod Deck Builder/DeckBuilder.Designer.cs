@@ -35,9 +35,8 @@
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
             openCardDataToolStripMenuItem = new ToolStripMenuItem();
-            modifyCardDataToolStripMenuItem = new ToolStripMenuItem();
-            openCardDataLocationToolStripMenuItem = new ToolStripMenuItem();
-            reloadCardDataToolStripMenuItem = new ToolStripMenuItem();
+            loadCardDataFromFilesToolStripMenuItem = new ToolStripMenuItem();
+            resetToDefaultToolStripMenuItem = new ToolStripMenuItem();
             DeckLoader = new OpenFileDialog();
             DeckSaver = new SaveFileDialog();
             CardSearch = new RichTextBox();
@@ -65,6 +64,8 @@
             FactionTypeComboBox = new ComboBox();
             label1 = new Label();
             CardIDList = new ListBox();
+            CardDataLoader = new OpenFileDialog();
+            CardNameLoader = new OpenFileDialog();
             menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)CopiesToAdd).BeginInit();
             SuspendLayout();
@@ -120,31 +121,24 @@
             // 
             // openCardDataToolStripMenuItem
             // 
-            openCardDataToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { modifyCardDataToolStripMenuItem, reloadCardDataToolStripMenuItem, openCardDataLocationToolStripMenuItem });
+            openCardDataToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadCardDataFromFilesToolStripMenuItem, resetToDefaultToolStripMenuItem });
             openCardDataToolStripMenuItem.Name = "openCardDataToolStripMenuItem";
             openCardDataToolStripMenuItem.Size = new Size(90, 24);
             openCardDataToolStripMenuItem.Text = "Card Data";
             // 
-            // modifyCardDataToolStripMenuItem
+            // loadCardDataFromFilesToolStripMenuItem
             // 
-            modifyCardDataToolStripMenuItem.Name = "modifyCardDataToolStripMenuItem";
-            modifyCardDataToolStripMenuItem.Size = new Size(260, 26);
-            modifyCardDataToolStripMenuItem.Text = "Modify Card Data";
-            modifyCardDataToolStripMenuItem.Click += modifyCardDataToolStripMenuItem_Click;
+            loadCardDataFromFilesToolStripMenuItem.Name = "loadCardDataFromFilesToolStripMenuItem";
+            loadCardDataFromFilesToolStripMenuItem.Size = new Size(250, 26);
+            loadCardDataFromFilesToolStripMenuItem.Text = "Load Custom Card Data";
+            loadCardDataFromFilesToolStripMenuItem.Click += loadCardDataFromFilesToolStripMenuItem_Click;
             // 
-            // openCardDataLocationToolStripMenuItem
+            // resetToDefaultToolStripMenuItem
             // 
-            openCardDataLocationToolStripMenuItem.Name = "openCardDataLocationToolStripMenuItem";
-            openCardDataLocationToolStripMenuItem.Size = new Size(260, 26);
-            openCardDataLocationToolStripMenuItem.Text = "Open Card Data Location";
-            openCardDataLocationToolStripMenuItem.Click += openCardDataLocationToolStripMenuItem_Click;
-            // 
-            // reloadCardDataToolStripMenuItem
-            // 
-            reloadCardDataToolStripMenuItem.Name = "reloadCardDataToolStripMenuItem";
-            reloadCardDataToolStripMenuItem.Size = new Size(260, 26);
-            reloadCardDataToolStripMenuItem.Text = "Reload Card Data";
-            reloadCardDataToolStripMenuItem.Click += reloadCardDataToolStripMenuItem_Click;
+            resetToDefaultToolStripMenuItem.Name = "resetToDefaultToolStripMenuItem";
+            resetToDefaultToolStripMenuItem.Size = new Size(250, 26);
+            resetToDefaultToolStripMenuItem.Text = "Reset to Default";
+            resetToDefaultToolStripMenuItem.Click += resetToDefaultToolStripMenuItem_Click;
             // 
             // DeckLoader
             // 
@@ -416,6 +410,16 @@
             CardIDList.Size = new Size(41, 384);
             CardIDList.TabIndex = 30;
             // 
+            // CardDataLoader
+            // 
+            CardDataLoader.FileName = "openFileDialog1";
+            CardDataLoader.FileOk += CardDataLoader_FileOk;
+            // 
+            // CardNameLoader
+            // 
+            CardNameLoader.FileName = "openFileDialog1";
+            CardNameLoader.FileOk += CardNameLoader_FileOk;
+            // 
             // DeckBuilder
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -497,8 +501,9 @@
         private Label label1;
         private ToolStripMenuItem openCardDataToolStripMenuItem;
         private ListBox CardIDList;
-        private ToolStripMenuItem openCardDataLocationToolStripMenuItem;
-        private ToolStripMenuItem reloadCardDataToolStripMenuItem;
-        private ToolStripMenuItem modifyCardDataToolStripMenuItem;
+        private ToolStripMenuItem loadCardDataFromFilesToolStripMenuItem;
+        private OpenFileDialog CardDataLoader;
+        private OpenFileDialog CardNameLoader;
+        private ToolStripMenuItem resetToDefaultToolStripMenuItem;
     }
 }

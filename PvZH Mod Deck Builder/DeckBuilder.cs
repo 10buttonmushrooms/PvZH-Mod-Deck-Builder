@@ -31,8 +31,7 @@ namespace PvZH_Mod_Deck_Builder
 
         private void DeckBuilder_Load(object sender, EventArgs e)
         {
-            CardsStorage.FirstTimeAllCardsJson();
-            CardsStorage.GetAllCardsFromJson();
+            CardsStorage.LoadDefaultCards();
             InitializeAllCards();
             InitializeDeck();
             InitializeCombos();
@@ -430,41 +429,46 @@ namespace PvZH_Mod_Deck_Builder
             Process.Start("explorer.exe", CardsStorage.PathToFolder);
         }
 
-        private void reloadCardDataToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadCardDataFromFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CardsStorage.GetAllCardsFromJson();
-            CardSearch_TextChanged(sender, e);
-            Deck.ForceUniqueCardsUpdate();
-            DeckUpdate(false);
+            CardDataLoader.ShowDialog();
         }
 
-        private void modifyCardDataToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CardDataLoader_FileOk(object sender, CancelEventArgs e)
         {
-            using (CardDataModifier CDM = new CardDataModifier())
+            using (StreamReader reader = new StreamReader(CardDataLoader.FileName))
             {
-                CDM.ShowDialog();
-                CardSearch_TextChanged(sender, e);
-                Deck.ForceUniqueCardsUpdate();
-                DeckUpdate(false);
+                try
+                {
+                    string CardDataJson = File.ReadAllText(CardDataLoader.FileName);
+                    CardDataHandler.LoadedCardData = JsonSerializer.Deserialize<Dictionary<string, CardDataHandler.CardData>>(CardDataJson);
+                    CardNameLoader.ShowDialog();
+                }
+                catch
+                {
+                    MessageBox.Show("Something went wrong!", "ERROR!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
-        private void menuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void CardNameLoader_FileOk(object sender, CancelEventArgs e)
         {
-
+            using (StreamReader reader = new StreamReader(CardNameLoader.FileName))
+            {
+                string[] lines = File.ReadAllLines(CardNameLoader.FileName);
+                CardsStorage.SetCustomCards(lines);
+                Deck.ForceUniqueCardsUpdate();
+                DeckUpdate(false);
+                CardSearch_TextChanged(sender, e);
+            }
         }
-    }
-    public struct CardItem
-    {
-        public string Name { get; set; } = "";
-        public int ID { get; set; } = -1;
-        public string Guid { get; set; } = "";
-        public CardItem(int id, string name, string guid)
+
+        private void resetToDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Guid = guid;
-            ID = id;
-            if (name.Contains("--")) Name = guid;
-            else Name = name;
+            CardsStorage.LoadDefaultCards();
+            Deck.ForceUniqueCardsUpdate();
+            DeckUpdate(false);
+            CardSearch_TextChanged(sender, e);
         }
     }
     public struct DeckTypeCombo
