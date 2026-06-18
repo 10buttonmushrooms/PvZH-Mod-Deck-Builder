@@ -11,7 +11,7 @@ namespace PvZH_Mod_Deck_Builder
         // TODO: Make pages for DeckList and CardList
         JsonAIDeck AIDeckInfo = new();
         JsonStrategyDeck StrategyDeckInfo = new();
-        EditableDeck Deck = new();
+        List<CardItem> Deck = [];
         public BindingList<CardItem> CurrentCardItems = [];
         List<CardItem> SearchedCards = [];
         int SelectedListCardID = -1;
@@ -48,7 +48,7 @@ namespace PvZH_Mod_Deck_Builder
                     StrategyDeckInfo = JsonSerializer.Deserialize<JsonStrategyDeck>(JsonDeck) ?? new();
                     if (JsonDoc.RootElement.TryGetProperty(nameof(JsonAIDeck.MainDeckCardIds), out _))
                     {
-                        Deck.SetCardsByIDs(AIDeckInfo.MainDeckCardIds);
+                        Deck = CardsStorage.GetCardsByIDs(AIDeckInfo.MainDeckCardIds);
                         DeckSaver.FileName = DeckLoader.FileName;
                         DeckTypeComboBox.SelectedItem = DeckTypeComboBox.Items[1];
                         DeckNameTextBox.Text = AIDeckInfo.DeckName;
@@ -57,7 +57,7 @@ namespace PvZH_Mod_Deck_Builder
                     }
                     else if (JsonDoc.RootElement.TryGetProperty(nameof(JsonStrategyDeck.Cards), out _))
                     {
-                        Deck.SetCardsByIDs(StrategyDeckInfo.AllCardIDs());
+                        Deck = CardsStorage.GetCardsByIDs(StrategyDeckInfo.AllCardIDs());
                         DeckSaver.FileName = DeckLoader.FileName;
                         DeckTypeComboBox.SelectedItem = DeckTypeComboBox.Items[0];
                         FactionTypeComboBox.SelectedItem = FactionTypeComboBox.Items[StrategyDeckInfo.Faction];
@@ -95,7 +95,7 @@ namespace PvZH_Mod_Deck_Builder
             if (DeckTypeComboBox.SelectedIndex == 1)
             {
                 AIDeckInfo = new();
-                AIDeckInfo.MainDeckCardIds = Deck.Cards.Select(card => card.ID).ToArray();
+                AIDeckInfo.MainDeckCardIds = Deck.Select(card => card.ID).ToArray();
                 JsonDeck = JsonSerializer.Serialize(AIDeckInfo);
             }
             else
@@ -103,7 +103,7 @@ namespace PvZH_Mod_Deck_Builder
                 StrategyDeckInfo = new();
                 StrategyDeckInfo.m_Name = DeckNameTextBox.Text;
                 StrategyDeckInfo.Faction = FactionTypeComboBox.SelectedIndex == 1 ? 1 : 0;
-                JsonDeck = StrategyDeckInfo.GetCompleteJson(Deck.Cards);
+                JsonDeck = StrategyDeckInfo.GetCompleteJson(Deck);
             }
             File.WriteAllText(DeckSaver.FileName, JsonDeck);
             this.Text = savedName;
@@ -200,16 +200,16 @@ namespace PvZH_Mod_Deck_Builder
         {
             if (SelectedListCardID > 0)
             {
-                for (int i = 0; i < CopiesToAdd.Value; i++) Deck.Cards.Add(EditableDeck.GetCardByID(SelectedListCardID));
+                for (int i = 0; i < CopiesToAdd.Value; i++) Deck.Add(CardsStorage.GetCardByID(SelectedListCardID));
                 DeckUpdate(false);
                 this.Text = unsavedName;
             }
             
         }
-        IEnumerable<CardItem> UniqueDeckCards() => Deck.Cards.DistinctBy(x => x.ID);
+        IEnumerable<CardItem> UniqueDeckCards() => Deck.DistinctBy(x => x.ID);
         private void DeckUpdate(bool RemovingCards)
         {
-            Deck.Cards = Deck.Cards.OrderBy(x => x.ID).ToList();
+            Deck = Deck.OrderBy(x => x.ID).ToList();
             CurrentDeckListPage = Math.Clamp(CurrentDeckListPage, 0, NumOfDeckPages());
             Deck_PageChanged();
 
@@ -223,12 +223,12 @@ namespace PvZH_Mod_Deck_Builder
         {
             CopiesList.Items.Clear();
             DisplayedDeckCards.Clear();
-            CardCount.Text = "×" + Deck.Cards.Count.ToString();
+            CardCount.Text = "×" + Deck.Count.ToString();
 
             foreach (CardItem Card in UniqueDeckCards().Skip(ItemsPerPage * CurrentDeckListPage).Take(ItemsPerPage))
             {
-                CopiesList.Items.Add("×" + Deck.Cards.Count(x => x.ID == Card.ID).ToString());
-                DisplayedDeckCards.Add(EditableDeck.GetCardByID(Card.ID));
+                CopiesList.Items.Add("×" + Deck.Count(x => x.ID == Card.ID).ToString());
+                DisplayedDeckCards.Add(CardsStorage.GetCardByID(Card.ID));
             }
 
             SetDeckListPageLabel();
@@ -239,20 +239,20 @@ namespace PvZH_Mod_Deck_Builder
         private void CardRemover_Click(object sender, EventArgs e)
         {
             int CardIDToRemove = SelectedDeckCardID;
-            CardItem CardToRemove = Deck.Cards.Find(x => x.ID == SelectedDeckCardID);
+            CardItem CardToRemove = Deck.Find(x => x.ID == SelectedDeckCardID);
             if (SelectedDeckCardID > 0 && CardToRemove.ID > 0)
             {
-                Deck.Cards.Remove(CardToRemove);
+                Deck.Remove(CardToRemove);
                 DeckUpdate(true);
-                if (Deck.Cards.Any(x => x.ID == CardIDToRemove)) DeckList.SelectedValue = CardIDToRemove;
+                if (Deck.Any(x => x.ID == CardIDToRemove)) DeckList.SelectedValue = CardIDToRemove;
                 this.Text = unsavedName;
             }
         }
         private void CardRemoverAll_Click(object sender, EventArgs e)
         {
-            if (SelectedDeckCardID > 0 && Deck.Cards.Any(x => x.ID == SelectedDeckCardID))
+            if (SelectedDeckCardID > 0 && Deck.Any(x => x.ID == SelectedDeckCardID))
             {
-                Deck.Cards.RemoveAll(x => x.ID == SelectedDeckCardID);
+                Deck.RemoveAll(x => x.ID == SelectedDeckCardID);
                 DeckUpdate(true);
                 this.Text = unsavedName;
             }
@@ -274,7 +274,7 @@ namespace PvZH_Mod_Deck_Builder
                 "New Deck", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dialogResult == DialogResult.Yes)
             {
-                Deck.Cards.Clear();
+                Deck.Clear();
                 DeckSaver.FileName = "";
                 DeckUpdate(false);
                 DeckNameTextBox.Text = "";

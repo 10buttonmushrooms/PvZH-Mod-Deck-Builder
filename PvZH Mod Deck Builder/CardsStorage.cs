@@ -595,6 +595,19 @@ namespace PvZH_Mod_Deck_Builder
         {
             AllCardItems = DefaultAllCardItems.ToList();
         }
+        public static CardItem GetCardByID(int id)
+        {
+            CardItem card = AllCardItems.Find(x => x.ID == id);
+            if (card.ID > 0) return card;
+
+            card = new CardItem(id, "MISSING_CARD_" + id, "MISSING_GUID_" + id);
+            AllCardItems.Add(card);
+            return card;
+        }
+        public static List<CardItem> GetCardsByIDs(int[] ids)
+        {
+            return ids.Order().Select(GetCardByID).ToList();
+        }
         public static void SetCustomCards(string[] lines)
         {
             AllCardItems.Clear();

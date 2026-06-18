@@ -35,20 +35,19 @@ namespace PvZH_Mod_Deck_Builder
         }
         internal string GetCompleteJson(List<CardItem> CardItems)
         {
-            List<CardsObj.CardEntriesObj.Card> CardList = [];
-            foreach (CardItem UniqueCard in CardItems.DistinctBy(x => x.ID))
-            {
-                CardsObj.CardEntriesObj.Card CardForList = new();
-                CardForList.Faction = Faction;
-                CardForList.Guid = UniqueCard.Guid;
-                CardForList.CardGuid = UniqueCard.ID;
-                CardForList.NumCopies = CardItems.Count(x => x.ID == UniqueCard.ID);
-                CardForList.Filter = "";
-                CardList.Add(CardForList);
-            }
             Cards = new();
-            Cards.CardEntries = new();
-            Cards.CardEntries.Array = CardList.ToArray();
+            Cards.CardEntries.Array = CardItems.GroupBy(card => card.ID).Select(group =>
+            {
+                CardItem card = group.First();
+                return new CardsObj.CardEntriesObj.Card
+                {
+                    Faction = Faction,
+                    Guid = card.Guid,
+                    CardGuid = card.ID,
+                    NumCopies = group.Count(),
+                    Filter = ""
+                };
+            }).ToArray();
             return JsonSerializer.Serialize(new
             {
                 m_GameObject = new { m_FileID = 0, m_PathID = 0 },
@@ -59,23 +58,6 @@ namespace PvZH_Mod_Deck_Builder
                 Cards,
                 SuperpowerOverrides = new { CardEntries = new { Array = Array.Empty<object>() } }
             }, new JsonSerializerOptions { WriteIndented = true });
-        }
-    }
-    internal class EditableDeck
-    {
-        public List<CardItem> Cards { get; set; } = [];
-        public static CardItem GetCardByID(int id)
-        {
-            if (!CardsStorage.AllCardItems.Exists(x => x.ID == id))
-                CardsStorage.AllCardItems.Add(new CardItem(id, "MISSING_CARD_" + id.ToString(), "MISSING_GUID_" + id.ToString()));
-
-            return CardsStorage.AllCardItems.Find(x => x.ID == id)!;
-            
-       
-        }
-        public void SetCardsByIDs(int[] IDs)
-        {
-            Cards = IDs.Order().Select(GetCardByID).ToList();
         }
     }
     public struct CardItem

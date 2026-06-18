@@ -1,4 +1,4 @@
-﻿namespace PvZH_Mod_Deck_Builder
+namespace PvZH_Mod_Deck_Builder
 {
     internal class CardDataHandler
     {
