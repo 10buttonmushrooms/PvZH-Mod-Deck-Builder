@@ -43,9 +43,10 @@ namespace PvZH_Mod_Deck_Builder
             string JsonDeck = File.ReadAllText(DeckLoader.FileName);
             try
             {
+                    using JsonDocument JsonDoc = JsonDocument.Parse(JsonDeck);
                     AIDeckInfo = JsonSerializer.Deserialize<JsonAIDeck>(JsonDeck) ?? new();
                     StrategyDeckInfo = JsonSerializer.Deserialize<JsonStrategyDeck>(JsonDeck) ?? new();
-                    if (AIDeckInfo.MainDeckCardIds.Length > 0)
+                    if (JsonDoc.RootElement.TryGetProperty(nameof(JsonAIDeck.MainDeckCardIds), out _))
                     {
                         Deck.SetCardsByIDs(AIDeckInfo.MainDeckCardIds);
                         DeckSaver.FileName = DeckLoader.FileName;
@@ -54,7 +55,7 @@ namespace PvZH_Mod_Deck_Builder
                         DeckUpdate(false);
                         this.Text = savedName;
                     }
-                    else if (StrategyDeckInfo.Cards != null)
+                    else if (JsonDoc.RootElement.TryGetProperty(nameof(JsonStrategyDeck.Cards), out _))
                     {
                         Deck.SetCardsByIDs(StrategyDeckInfo.AllCardIDs());
                         DeckSaver.FileName = DeckLoader.FileName;

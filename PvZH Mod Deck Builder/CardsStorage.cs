@@ -608,7 +608,7 @@ namespace PvZH_Mod_Deck_Builder
                     int id = int.Parse(CDK);
                     string cardname = nameline.Split(',')[1];
                     cardname = cardname.Replace(" ", "!-spckey-!");
-                    cardname = WebUtility.HtmlDecode(cardname);
+                    cardname = System.Text.RegularExpressions.Regex.Replace(WebUtility.HtmlDecode(cardname), "<.*?>", "");
                     cardname = cardname.Replace("!-spckey-!", " ");
                     AllCardItems.Add(new CardItem(id, cardname, prefabname));
                 }
